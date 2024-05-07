@@ -1,0 +1,18 @@
+{% extends 'base.html'%}
+{% block title %}|Home{% endblock %}
+
+{% block content%}
+<h1>All listings</h1>
+{% for listing in listings %}
+<picture>
+    <img class="card-img-top" src="{{listing.image.url}}" alt="listing">
+
+</picture>
+<p>{{listing.name}}</p>
+<p>{{listing.description}}</p>
+<p>{{listing.listing_date}}</p>
+
+
+{% endfor %}
+
+{% endblock %}

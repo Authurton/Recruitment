@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>User Profile for {{user_profile.first_name}} {{user_profile.last_name}}</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h4>Upload CV</h4>
+    <input type="file" name="cv_file" accept=".pdf" required>
+    <button type="submit">Upload</button>
+</form>
+<section>
+     
+  <h2>User CVs</h2>
+  {% if cv_data %}
+    <ul>
+      {% for cv in cv_data %}
+        <li>{{ cv.cv_file.name }}</li>
+         <a class="btn btn-secondary btn-block" href="{% url 'download_cv' cv.id %}">Save CV</a>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No CVs uploaded yet.</p>
+  {% endif %}
+</section>
+{% endblock %}
+

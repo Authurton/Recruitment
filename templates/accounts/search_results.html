@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Searh results</h2>
+{% for my_user in users %}
+{{my_user.first_name}} {{my_user.last_name}}
+{% endfor %}
+
+{% for listing in listings %}
+{{listing.name}}
+{{listing.description}}
+{% endfor %}
+
+{% endblock %}

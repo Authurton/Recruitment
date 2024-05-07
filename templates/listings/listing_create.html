@@ -1,0 +1,9 @@
+<h1>Creating listing</h1>
+
+<form class="mx-1 mx-md-4" method="post" action="{% url 'listing_create' %}" enctype="multipart/form-data">  
+{% csrf_token %}
+  {{ form.as_p }}
+  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg">Create Listing</button>
+  </div>
+</form>
