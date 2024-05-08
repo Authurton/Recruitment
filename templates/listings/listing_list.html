@@ -2,17 +2,19 @@
 {% block title %}|Home{% endblock %}
 
 {% block content%}
-<h1>All listings</h1>
-{% for listing in listings %}
-<picture>
-    <img class="card-img-top" src="{{listing.image.url}}" alt="listing">
-
-</picture>
-<p>{{listing.name}}</p>
-<p>{{listing.description}}</p>
-<p>{{listing.listing_date}}</p>
-
-
-{% endfor %}
-
+<div style="text-align: center;">
+    <h1>All Posts</h1>
+    {% for listing in listings %}
+    <div class="col-md-6 col-lg-4 mb-4" style="justify-content: center;">
+        <div class="card listing-preview">
+            <picture>
+                <img style="height: 200px; width: auto;" class="card-img-top" src="{{listing.image.url}}" alt="listing">
+            </picture>
+            <p>{{listing.name}}</p>
+            <p>{{listing.description}}</p>
+            <p>{{listing.listing_date}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

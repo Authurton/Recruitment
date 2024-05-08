@@ -3,14 +3,15 @@
 {% block content %}
 <h1>User Profile for {{user_profile.first_name}} {{user_profile.last_name}}</h1>
 
+{% if request.user.is_authenticated and request.user.id == user_profile.id %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <h4>Upload CV</h4>
     <input type="file" name="cv_file" accept=".pdf" required>
     <button type="submit">Upload</button>
 </form>
+{% endif %}
 <section>
-     
   <h2>User CVs</h2>
   {% if cv_data %}
     <ul>

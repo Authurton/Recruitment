@@ -8,6 +8,7 @@ from django.contrib import messages, auth
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.conf import settings
 import os
+from django.db.models import Q
 
 from .forms import SignInForm, SignUpForm
 from .models import MyUser
@@ -71,5 +72,13 @@ def download_cv(request, cv_id):
         return response
 
 # else if hiring can have a dashboard to see contacted candidates
+def recruiter_dashboard(request, user_id):
+    recruiter = MyUser.objects.get(Q(id=user_id) & Q(is_recruiter = True))
+    
+    context = {
+        'recruiter': recruiter,
+    }
+    return render(request, 'accounts/dashboard.html', context)
+# can finish their details(company)
 # can reject or accept
 

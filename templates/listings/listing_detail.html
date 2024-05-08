@@ -1,1 +1,9 @@
-<h1>Listing detail</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Listing detail</h1>
+    {{listing.name}}
+    {{listing.description}}
+    {{listing.listing_date}}
+
+{% endblock %}

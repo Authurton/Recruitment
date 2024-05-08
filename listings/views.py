@@ -26,7 +26,7 @@ class ListingListView(ListView):
 class ListingDetailView(DetailView):
     model = Listing
     template_name = 'listings/listing_detail.html'
-    context_object_name = 'listings'
+    context_object_name = 'listing'
 
 # Update listing
 class ListingUpdateView(UpdateView):

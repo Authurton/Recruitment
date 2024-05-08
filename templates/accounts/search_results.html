@@ -2,13 +2,24 @@
 
 {% block content %}
 <h2>Searh results</h2>
-{% for my_user in users %}
-{{my_user.first_name}} {{my_user.last_name}}
-{% endfor %}
+{% if users %}
+    {% for my_user in users %}
+    <a href="{% url 'profile' my_user.id %}">
+        {{my_user.first_name}} {{my_user.last_name}}
+    </a>
+    {% endfor %}
+{% else %}
+<h4>No users matching that search </h4>
+{% endif %}
 
-{% for listing in listings %}
-{{listing.name}}
-{{listing.description}}
-{% endfor %}
-
+{% if listings %}
+    {% for listing in listings %}
+    <a href="{% url 'listing_detail' listing.id %}">
+        {{listing.name}}
+    </a>
+    {{listing.description}}
+    {% endfor %}
+{% else %}
+    <h4>No listings matching that search query</h4>
+{% endif %}
 {% endblock %}
