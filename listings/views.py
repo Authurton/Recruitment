@@ -76,6 +76,14 @@ class JobsListView(ListView):
 class CompanyCreateView(CreateView):
     model = Company
     form_class = CompanyForm
-    template_name = 'listings/company_create.html'
+    template_name = 'company/company_create.html'
     success_url = reverse_lazy('jobs')
 
+# Update company profile
+class CompanyUpdateView(UpdateView):
+    model = Company
+    form_class = CompanyForm
+    template_name = 'company/company_update.html'
+    
+    def get_success_url(self):
+        return reverse_lazy('dashboard', args=[self.request.user.id])

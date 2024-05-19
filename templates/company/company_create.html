@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% block stylesheets %}{% endblock stylesheets %}
+{% load crispy_forms_tags %}
+{% block title %} | Create company profile {% endblock %}
 
 {% block content %}
-<h1>Company Profile</h1>
-
 <form class="mx-1 mx-md-4" method="post" action="{% url 'company_create' %}" enctype="multipart/form-data">  
 {% csrf_token %}
-  {{ form.as_p }}
+  {{ form|crispy }}
   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
     <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg">Create company</button>
   </div>

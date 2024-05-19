@@ -8,6 +8,7 @@ from .views import (
     search_results,
     JobCreateView,
     CompanyCreateView,
+    CompanyUpdateView,
     JobsListView
 )
 
@@ -25,5 +26,6 @@ urlpatterns = [
 
     # company
     path('company-create/', CompanyCreateView.as_view(), name='company_create'),
+    path('<int:pk>/company-update/', CompanyUpdateView.as_view(), name='company_update'),
 
 ]
