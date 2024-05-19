@@ -8,6 +8,6 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('profile/<int:user_id>', profile, name='profile'),
     path('logout/', logout_view, name='logout'),
-    path('download/<int:cv_id>/', views.download_cv, name='download_cv'),
+    path('download/<int:cv_id>/<int:user_id>/<int:request_user_id>/', views.download_cv, name='download_cv'),
     path('dashboard/<int:user_id>', views.recruiter_dashboard, name='dashboard'),
 ]

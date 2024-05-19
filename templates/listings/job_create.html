@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+{% load crispy_forms_tags %}
+{% block title %} | Post a job {% endblock %}
+
+{% block content %}
+<h1>Job Posting</h1>
+
+<form class="mx-1 mx-md-4" method="post" action="{% url 'job_create' %}" enctype="multipart/form-data">  
+{% csrf_token %}
+  {{ form|crispy }}
+  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg">Post a Job</button>
+  </div>
+</form>
+{% endblock %}

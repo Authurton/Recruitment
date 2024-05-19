@@ -1,28 +1,160 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<h1>User Profile for {{user_profile.first_name}} {{user_profile.last_name}}</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="mb-0">User Profile</h1>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">{{ user_profile.first_name }} {{ user_profile.last_name }}</h2>
+                    {% if request.user.is_authenticated and request.user.id == user_profile.id %}
+                    <div class="mb-4">
+                        <h4 class="mb-3">Upload CV</h4>
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="cv_file" accept=".pdf" required id="cv-file-input">
+                                <label class="custom-file-label" for="cv-file-input">Choose file</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Upload</button>
+                        </form>
+                    </div>
+                    <div>
+                      {% if views %}
+                        <ul class="list-group list-group-flush">
+                            {% for view in views %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ view.viewer }}</span>
+                                <small class="text-muted">{{ view.created_at }}</small>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        
+                        <div class="mt-3">
+                            {% if views.has_other_pages %}
+                            <ul class="pagination justify-content-center">
+                                {% if views.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ views.previous_page_number }}">Previous</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                                {% endif %}
+                        
+                                {% for page_num in views.paginator.page_range %}
+                                {% if page_num == views.number %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ page_num }}</span>
+                                </li>
+                                {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                        
+                                {% if views.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ views.next_page_number }}">Next</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Next</span>
+                                </li>
+                                {% endif %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted text-center">No views yet.</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 
-{% if request.user.is_authenticated and request.user.id == user_profile.id %}
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <h4>Upload CV</h4>
-    <input type="file" name="cv_file" accept=".pdf" required>
-    <button type="submit">Upload</button>
-</form>
-{% endif %}
-<section>
-  <h2>User CVs</h2>
-  {% if cv_data %}
-    <ul>
-      {% for cv in cv_data %}
-        <li>{{ cv.cv_file.name }}</li>
-         <a class="btn btn-secondary btn-block" href="{% url 'download_cv' cv.id %}">Save CV</a>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No CVs uploaded yet.</p>
-  {% endif %}
-</section>
+    <section class="mt-5">
+        <h2 class="mb-4 text-center">User CVs</h2>
+        {% if cv_data %}
+        <div class="row justify-content-center">
+            {% for cv in cv_data %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    {% if cv.cv_file %}
+                    <div class="card-body">
+                        <iframe src="{{cv.cv_file.url}}" width="100%" height="400px" class="rounded"></iframe>
+                    </div>
+                    {% else %}
+                    <div class="card-body">
+                        <p class="card-text text-center">No CV file uploaded.</p>
+                    </div>
+                    {% endif %}
+                    <div class="card-footer">
+                        {% if request.user.is_authenticated %}
+                        <a class="btn btn-primary btn-block" href="{% url 'download_cv' cv.id cv.user.id request.user.id %}" aria-label="View CV">
+                            <i class="fas fa-download fa-fw"></i> View CV
+                        </a>
+                        {% else %}
+                        <a class="btn btn-secondary btn-block" href="{% url 'login' %}" aria-label="Login to View">
+                            <i class="fas fa-sign-in-alt fa-fw"></i> Login to View
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:2 and not forloop.last %}
+        </div>
+        <div class="row justify-content-center">
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center">No CVs uploaded yet.</p>
+        {% endif %}
+    </section>
+</div>
 {% endblock %}
 
+{% block extra_scripts %}
+<script src="{% static 'js/bs-custom-file-input.min.js' %}"></script>
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<script>
+    $(document).ready(function() {
+        bsCustomFileInput.init();
+
+        // Dropzone configuration
+        var dropzone = new Dropzone('#cv-upload', {
+            maxFiles: 1,
+            acceptedFiles: '.pdf',
+            dictDefaultMessage: 'Drop files here or click to upload.',
+            dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+            dictInvalidFileType: "You can only upload PDF files.",
+            dictMaxFilesExceeded: "You can only upload one file.",
+        });
+
+        dropzone.on('sending', function(file, xhr, formData) {
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        });
+
+        dropzone.on('success', function(file, response) {
+            // Handle successful upload
+            console.log('File uploaded successfully:', file);
+            // Optionally, you can reload the page or update the UI
+        });
+
+        dropzone.on('error', function(file, errorMessage, xhr) {
+            // Handle upload error
+            console.error('File upload error:', errorMessage);
+        });
+    });
+</script>
+{% endblock %}

@@ -14,6 +14,9 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'dashboard' user.id %}">Dashboard</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'assess' %}">Assessments</a>
+              </li>
             {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'profile' user.id %}">Profile</a>
@@ -22,6 +25,9 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'listing_create' %}">Post</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'jobs' %}">Jobs</a>
+        </li>
           {% else %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'login' %}">Login</a>

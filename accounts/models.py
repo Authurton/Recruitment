@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from listings.models import Company
 
 class MyUserManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
@@ -23,10 +24,12 @@ class MyUserManager(BaseUserManager):
         return user
 
 class MyUser(AbstractBaseUser):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='employees', null=True, blank=True)
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
     pro_pic = models.ImageField(upload_to='photos/%Y/%m/&d', null=True, blank=True)
+    cv_views = models.BooleanField(default=False)
     is_recruiter = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
@@ -56,3 +59,12 @@ class CV(models.Model):
 
     def __str__(self):
         return self.cv_file.name
+    
+class CVView(models.Model):
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE)
+    viewer = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.viewer.email} viewed CV {self.cv.id} at {self.viewed_at}'

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h6>All assessments</h6>
+{% for assess in assessments %}
+<p>{{assess.user}}</p>
+<p>{{assess.name}}</p>
+
+{% endfor %}
+
+{% endblock %}
+

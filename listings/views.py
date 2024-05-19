@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .models import Listing
-from .forms import ListingForm
+from .models import Listing, Job, Company
+from .forms import ListingForm, JobForm, CompanyForm
 from accounts.models import MyUser
 
-# Create
+# Create Listings
 class ListingCreateView(CreateView):
     model = Listing
     form_class = ListingForm
@@ -57,3 +57,25 @@ def search_results(request):
         return render(request, 'accounts/search_results.html', context)
     else:
         return render(request, 'invalid_search_criteria.html')
+    
+# jobs
+class JobCreateView(CreateView):
+    model = Job
+    form_class = JobForm
+    template_name = 'listings/job_create.html'
+    success_url = reverse_lazy('jobs')
+
+# get all jobs
+class JobsListView(ListView):
+    model = Job
+    template_name = 'listings/jobs.html'
+    context_object_name = 'jobs'
+    ordering = ['-listed_date']
+
+# company
+class CompanyCreateView(CreateView):
+    model = Company
+    form_class = CompanyForm
+    template_name = 'listings/company_create.html'
+    success_url = reverse_lazy('jobs')
+
